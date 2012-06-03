@@ -7,9 +7,14 @@ h2                 { font-size: 1.2em; }
 .page              { margin: 2em auto; width: 45em; border: 5px solid #ccc;
                      padding: 0.8em; background: white; }
 .resolutions       { list-style: none; margin: 0; padding: 0; }
+.resolution            { border-top: 1px solid #ccc; padding: 1ex 1em; }
+.resolution .kind      { float: left; width: 25%; }
+.resolution .passed_on { float: left; width: 50%; text-align: center; }
+.resolution .wiki_url  { float: right; }
+.resolution h2         { clear: both; }
 .resolutions li    { margin: 0.8em 1.2em; }
 .resolutions li h2 { margin-left: -1em; }
-.add-resolution    { font-size: 0.9em; border-bottom: 1px solid #ccc; }
+.add-resolution    { font-size: 0.9em; }
 .add-resolution dl { font-weight: bold; }
 .metanav           { text-align: right; font-size: 0.8em; padding: 0.3em;
                      margin-bottom: 1em; background: #fafafa; }

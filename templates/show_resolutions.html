@@ -21,13 +21,14 @@
   {% endif %}
   <ul class=resolutions>
   {% for resolution in resolutions %}
-    <div class=resolution>
+      <li>
+      <div class=resolution>
       <div class=kind>{{ resolution.kind }}</div>
-      <li><h2>{{ resolution.title }}</h2>
-      <p>{{ resolution.text|safe }}</p>
-      <div class=passed_on>{{ resolution.passed_on }}</div>
+      <div class=passed_on>Verabschiedet auf der {{ resolution.passed_on }}</div>
       {% if resolution.wiki_url %}<div class=wiki_url><a href={{ resolution.wiki_url }}>Link zum ZaPF-Wiki</a></div>{% endif %}
       {% if resolution.related_file %}<div class=related_file>{{ resolution.related_file }}</div>{% endif %}
+      <h2>{{ resolution.title }}</h2>
+      <p>{{ resolution.text|safe }}</p>
     </div>
   {% else %}
     <li><em>Unglaublich – noch keine Beschlüsse oder Resolutionen verabschiedet.</em>
