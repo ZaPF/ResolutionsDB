@@ -2,6 +2,7 @@
 
 ## all the imports
 import sqlite3
+from datetime import datetime
 from flask import Flask, request, session, g, redirect, url_for, \
              abort, render_template, flash
 ## configuration
@@ -48,32 +49,38 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            session['username'] = app.config['USERNAME']
+            flash('Log in erfolgreich.')
+            return redirect(url_for('show_resolutions'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    flash('Logout erfolgreich.')
+    return redirect(url_for('show_resolutions'))
 
 @app.route('/')
-def show_entries():
-    cur = g.db.execute('select title, text from entries order by id desc')
-    entries = [dict(title=row[0], text=row[1]) for row in
-    cur.fetchall()]
-    return render_template('show_entries.html', entries=entries)
+def show_resolutions():
+    cur = g.db.execute('SELECT title, text, kind, passed_on, wiki_url, related_file FROM resolutions ORDER BY passed_on DESC')
+    resolutions = [dict(title=row[0], text=row[1], kind=row[2],
+        passed_on=row[3], wiki_url=row[4], related_file=row[5])
+        for row in cur.fetchall()]
+    return render_template('show_resolutions.html', resolutions=resolutions)
 
 @app.route('/add', methods=['POST'])
-def add_entry():
+def add_resolution():
     if not session.get('logged_in'):
         abort(401)
-    g.db.execute('insert into entries (title, text) values (?, ?)',
-            [request.form['title'], request.form['text']])
+    g.db.execute('insert into resolutions (title, text, kind, passed_on, entered_by, entered_on, wiki_url, related_file) values (?, ?, ?, ?, ?, ?, ?, ?)', [
+                request.form['title'], request.form['text'], request.form['kind'],
+                request.form['passed_on'], session['username'],
+                datetime.now().isoformat(), request.form['wiki_url'],
+                request.form['related_file']
+                ] )
     g.db.commit()
-    flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+    flash('Neue(r) %s erfolgreich eingetragen.' % request.form['kind'])
+    return redirect(url_for('show_resolutions'))
 
 if __name__ == "__main__":
     app.run()
