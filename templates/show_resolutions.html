@@ -6,9 +6,9 @@
         <dt>Titel:
         <dd><input type=text size=30 name=title>
         <dt>Art (Beschluss, Resolution etc.):
-        <dd><input type=text size=30 name=kind>
+        <dd><input type=text size=30 name=kind id=input_kind>
         <dt>Wann beschlossen? (SoSe 2012, WiSe 1969, etc.):
-        <dd><input type=text size=30 name=passed_on>
+        <dd><input type=text size=30 name=passed_on id=input_passed_on>
         <dt>Text:
         <dd><textarea name=text rows=5 cols=40></textarea>
         <dt>Link zum ZaPF-Wiki (optional):
@@ -34,4 +34,16 @@
     <li><em>Unglaublich – noch keine Beschlüsse oder Resolutionen verabschiedet.</em>
   {% endfor %}
   </ul>
+{% endblock %}
+{% block js %}
+  {% if session.logged_in %}
+    <script>
+      $(function() {
+        $.getJSON('/api/autocomplete', function(acdata) {
+          $( "#input_kind" ).autocomplete({ source: acdata.kind });
+          $( "#input_passed_on" ).autocomplete({ source: acdata.passed_on });
+        });
+      });
+    </script>
+  {% endif %}
 {% endblock %}

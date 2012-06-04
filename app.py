@@ -3,7 +3,7 @@
 ## all the imports
 import sqlite3
 from datetime import datetime
-from flask import Flask, request, session, g, redirect, url_for, \
+from flask import Flask, jsonify, request, session, g, redirect, url_for, \
              abort, render_template, flash
 ## configuration
 DATABASE = '/tmp/flaskr.db'
@@ -59,6 +59,21 @@ def logout():
     session.pop('logged_in', None)
     flash('Logout erfolgreich.')
     return redirect(url_for('show_resolutions'))
+
+@app.route('/api/autocomplete')
+def api_autocomplete():
+    cur = g.db.execute('SELECT DISTINCT passed_on FROM resolutions')
+    passed_on = [row[0] for row in cur.fetchall()]
+    cur = g.db.execute('SELECT DISTINCT kind FROM resolutions')
+    kind = [row[0] for row in cur.fetchall()]
+    return jsonify(kind=kind,passed_on=passed_on)
+
+@app.route('/api/resolutions')
+def api_resolutions():
+    #b = request.args.get('b', 0, type=int)
+    cur = g.db.execute('SELECT title, text, kind, passed_on, wiki_url, related_file FROM resolutions ORDER BY passed_on DESC')
+    resolutions = [dict(title=row[0], text=row[1], kind=row[2], passed_on=row[3], wiki_url=row[4], related_file=row[5]) for row in cur.fetchall()]
+    return jsonify(resolutions=resolutions)
 
 @app.route('/')
 def show_resolutions():
