@@ -40,8 +40,8 @@
     <script>
       $(function() {
         $.getJSON('/api/autocomplete', function(acdata) {
-          $( "#input_kind" ).autocomplete({ source: acdata.kind });
-          $( "#input_passed_on" ).autocomplete({ source: acdata.passed_on });
+          $( "#input_kind" ).autocomplete({ source: acdata.kind, minLength: 0, delay: 0 });
+          $( "#input_passed_on" ).autocomplete({ source: acdata.passed_on, minLength: 0, delay: 0 });
         });
       });
     </script>
